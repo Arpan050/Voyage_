@@ -1,0 +1,33 @@
+.page { padding: 110px 56px 80px; min-height: 100vh; }
+.header { margin-bottom: 40px; }
+.label { font-family: var(--font-mono); font-size: .68rem; color: var(--terra); letter-spacing: .15em; text-transform: uppercase; margin-bottom: 10px; }
+.title { font-family: var(--font-display); font-size: clamp(2rem,4vw,3rem); font-weight: 300; margin-bottom: 12px; }
+.sub   { font-size: .95rem; color: var(--mist); max-width: 540px; line-height: 1.7; }
+
+.toolbar { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; margin-bottom: 36px; }
+.filters { display: flex; gap: 10px; flex-wrap: wrap; }
+.filterBtn {
+  background: transparent; border: 1px solid var(--sand);
+  padding: 8px 18px; border-radius: 2px; cursor: pointer;
+  font-family: var(--font-body); font-size: .8rem; color: var(--mist);
+  font-weight: 500; transition: all .2s;
+}
+.filterBtn:hover { border-color: var(--terra); color: var(--terra); }
+.active { background: var(--terra); color: var(--white); border-color: var(--terra); }
+.searchInput {
+  margin-left: auto; border: 1px solid var(--sand); border-radius: 2px;
+  padding: 8px 14px; font-family: var(--font-body); font-size: .84rem;
+  color: var(--ink); outline: none; transition: border-color .2s; background: var(--white);
+  min-width: 200px;
+}
+.searchInput:focus { border-color: var(--terra); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px,1fr)); gap: 26px; }
+.empty { grid-column: 1/-1; text-align: center; padding: 80px 0; color: var(--mist); }
+.empty span { font-size: 2.5rem; display: block; margin-bottom: 14px; }
+
+@media (max-width: 640px) {
+  .page { padding: 90px 20px 60px; }
+  .toolbar { flex-direction: column; align-items: flex-start; }
+  .searchInput { margin-left: 0; width: 100%; }
+}

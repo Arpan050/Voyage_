@@ -1,0 +1,6 @@
+.loggedInBox {
+  background: rgba(196,98,45,.08); border: 1px solid rgba(196,98,45,.2);
+  border-radius: 3px; padding: 10px 14px; font-size: .85rem;
+  color: var(--ink); margin-bottom: 16px;
+}
+.loggedInBox strong { color: var(--terra); }

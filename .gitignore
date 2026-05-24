@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+vendor/
+packages/
+
+# Build outputs
+/dist
+/build
+/out
+/coverage
+*.min.js
+*.min.css
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.production
+.env.staging
+
+# Logs
+*.log
+logs/
+
+# IDE and editors
+.vscode/
+.idea/
+*.swp
+*.suo
+*.user
+*.userosscache
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Monorepo-specific build folders
+# Adjust based on your tooling (e.g., Nx, Turborepo, Lerna)
+.cache/
+.turbo/
+.nx/
+node_modules/.pnpm-debug.log
+
+# Ignore sub-project build folders
+frontend/build/
+backend/dist/
+shared/lib/   

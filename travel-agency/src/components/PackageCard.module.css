@@ -1,0 +1,47 @@
+.card {
+  background: var(--white); border-radius: 4px; overflow: hidden;
+  border: 1px solid var(--sand); transition: transform .3s, box-shadow .3s, border-color .3s;
+  display: flex; flex-direction: column;
+}
+.card:hover { transform: translateY(-4px); box-shadow: 0 14px 40px rgba(0,0,0,.1); border-color: var(--terra); }
+
+.img {
+  height: 190px; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.emoji { font-size: 3.6rem; }
+.badge {
+  position: absolute; top: 14px; left: 14px;
+  background: var(--terra); color: var(--white);
+  font-family: var(--font-mono); font-size: .62rem;
+  padding: 3px 10px; border-radius: 2px; letter-spacing: .08em; text-transform: uppercase;
+}
+
+.body { padding: 22px; flex: 1; display: flex; flex-direction: column; }
+.dest { font-family: var(--font-mono); font-size: .66rem; color: var(--terra); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
+.name { font-family: var(--font-display); font-size: 1.35rem; font-weight: 600; margin-bottom: 8px; }
+.desc { font-size: .84rem; color: var(--mist); line-height: 1.65; margin-bottom: 16px; flex: 1; }
+
+.meta { display: flex; gap: 20px; margin-bottom: 18px; }
+.metaItem { font-size: .76rem; color: var(--mist); }
+.metaItem strong { color: var(--ink); display: block; font-size: .8rem; margin-bottom: 2px; }
+
+.footer { display: flex; align-items: center; justify-content: space-between; border-top: 1px solid var(--sand); padding-top: 14px; }
+.price { font-family: var(--font-display); font-size: 1.55rem; color: var(--terra); }
+.price span { font-family: var(--font-body); font-size: .72rem; color: var(--mist); }
+
+.detailBtn {
+  background: transparent; color: var(--ink);
+  border: 1px solid var(--sand); padding: 9px 14px; border-radius: 2px; cursor: pointer;
+  font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  transition: all .2s;
+}
+.detailBtn:hover { border-color: var(--terra); color: var(--terra); }
+
+.bookBtn {
+  background: var(--deep); color: var(--cream);
+  border: none; padding: 9px 18px; border-radius: 2px; cursor: pointer;
+  font-size: .78rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase;
+  transition: background .2s;
+}
+.bookBtn:hover { background: var(--terra); }
