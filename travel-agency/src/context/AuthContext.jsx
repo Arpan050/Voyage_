@@ -1,13 +1,12 @@
-import { createContext, useContext, useState, useEffect, useCallback } from "react";
+import { createContext, useState, useEffect, useCallback } from "react";
 import { api } from "../api/client";
 
-const AuthContext = createContext(null);
+export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user,    setUser]    = useState(null);
-  const [loading, setLoading] = useState(true); // checking stored token on mount
+  const [loading, setLoading] = useState(true);
 
-  // On mount: validate stored token
   useEffect(() => {
     const token = localStorage.getItem("voyage_token");
     if (!token) { setLoading(false); return; }
@@ -42,14 +41,11 @@ export function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, refreshUser, isAdmin: user?.role === "admin" }}>
+    <AuthContext.Provider value={{
+      user, loading, login, register, logout, refreshUser,
+      isAdmin: user?.role === "admin"
+    }}>
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth() {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
-  return ctx;
 }

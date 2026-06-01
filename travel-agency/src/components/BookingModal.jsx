@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { api } from "../api/client";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import styles from "./BookingModal.module.css";
 
 const EMPTY = { name:"", email:"", phone:"", travelers:"2", date:"", notes:"" };
