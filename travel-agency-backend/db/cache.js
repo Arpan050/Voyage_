@@ -1,61 +1,80 @@
-// const { createClient } = require("redis");
+const { createClient } = require("redis");
 
-// let client = null;
-// let connected = false;
+let client    = null;
+let connected = false;
 
-// async function getRedis() {
-//   if (client && connected) return client;
+async function connect() {
+  if (client && connected) return;
 
-//   client = createClient({ url: process.env.REDIS_URL || "redis://localhost:6379" });
+  client = createClient({
+    url: process.env.REDIS_URL || "redis://localhost:6379",
+    socket: {
+      connectTimeout: 3000,
+      reconnectStrategy: (retries) => {
+        if (retries > 3) return false; // stop retrying after 3 attempts
+        return retries * 500;
+      }
+    }
+  });
 
-//   client.on("error", (err) => {
-//     connected = false;
-//     console.warn("Redis unavailable — caching disabled:", err.message);
-//   });
-//   client.on("ready", () => { connected = true; });
+  client.on("connect",   () => { connected = true;  console.log("✅ Redis connected"); });
+  client.on("end",       () => { connected = false; console.log("⚠️  Redis disconnected"); });
+  client.on("error",     (err) => {
+    connected = false;
+    console.warn("⚠️  Redis unavailable:", err.message);
+  });
 
-//   try {
-//     await client.connect();
-//     connected = true;
-//   } catch {
-//     connected = false;
-//   }
+  try {
+    await Promise.race([
+      client.connect(),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("Redis connection timeout")), 3000))
+    ]);
+  } catch (err) {
+    connected = false;
+    console.warn("⚠️  Redis not available — caching disabled");
+  }
+}
 
-//   return client;
-// }
+// Initialize connection on startup
+connect();
 
-// // Get cached JSON value
-// async function cacheGet(key) {
-//   try {
-//     const c = await getRedis();
-//     if (!connected) return null;
-//     const val = await c.get(key);
-//     return val ? JSON.parse(val) : null;
-//   } catch { return null; }
-// }
+async function cacheGet(key) {
+  try {
+    if (!connected) return null;
+    const val = await Promise.race([
+      client.get(key),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 1000))
+    ]);
+    return val ? JSON.parse(val) : null;
+  } catch { return null; }
+}
 
-// // Set JSON value with TTL (seconds)
-// async function cacheSet(key, value, ttl = 300) {
-//   try {
-//     const c = await getRedis();
-//     if (!connected) return;
-//     await c.setEx(key, ttl, JSON.stringify(value));
-//   } catch { /* silent */ }
-// }
+async function cacheSet(key, value, ttl = 300) {
+  try {
+    if (!connected) return;
+    await Promise.race([
+      client.setEx(key, ttl, JSON.stringify(value)),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 1000))
+    ]);
+  } catch { /* silent */ }
+}
 
-// // Delete a cache key (or pattern with *)
-// async function cacheDel(key) {
-//   try {
-//     const c = await getRedis();
-//     if (!connected) return;
-//     await c.del(key);
-//   } catch { /* silent */ }
-// }
+async function cacheDel(key) {
+  try {
+    if (!connected) return;
+    await Promise.race([
+      client.del(key),
+      new Promise((_, reject) => setTimeout(() => reject(new Error("timeout")), 1000))
+    ]);
+  } catch { /* silent */ }
+}
 
-// module.exports = { cacheGet, cacheSet, cacheDel };
-// Redis disabled — all cache ops are no-ops
-async function cacheGet(key)          { return null; }
-async function cacheSet(key, val, ttl){ return; }
-async function cacheDel(key)          { return; }
+async function cacheFlush() {
+  try {
+    if (!connected) return;
+    await client.flushAll();
+    console.log("🗑️  Cache cleared");
+  } catch { /* silent */ }
+}
 
-module.exports = { cacheGet, cacheSet, cacheDel };
+module.exports = { cacheGet, cacheSet, cacheDel, cacheFlush };
