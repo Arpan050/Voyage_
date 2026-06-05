@@ -57,7 +57,6 @@ export default function Concierge() {
     <div className={styles.page}>
       <div className={styles.bg} />
       <div className={styles.container}>
-        <p className={styles.label}>Powered by Claude AI</p>
         <h1 className={styles.title}>Your personal<br />travel concierge</h1>
         <p className={styles.sub}>Ask about destinations, get packing advice, compare packages, or plan your perfect itinerary.</p>
 
