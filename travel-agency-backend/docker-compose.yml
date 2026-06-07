@@ -1,0 +1,74 @@
+version: "3.9"
+
+services:
+
+  # ── PostgreSQL ─────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    container_name: voyage_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       voyage_travel
+      POSTGRES_USER:     postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data   # data persists
+      - ./db/schema.sql:/docker-entrypoint-initdb.d/schema.sql  # auto-runs on first start
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ──────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: voyage_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes  # persist data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Express Backend ────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: voyage_backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      PORT:         5000
+      NODE_ENV:     development
+      DB_HOST:      postgres      # container name = hostname
+      DB_PORT:      5432
+      DB_NAME:      voyage_travel
+      DB_USER:      postgres
+      DB_PASSWORD:  postgres123
+      REDIS_URL:    redis://redis:6379
+      JWT_SECRET:   your_jwt_secret_change_in_production
+      JWT_EXPIRES_IN: 7d
+      FRONTEND_URL: http://localhost:5173
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - .:/app                          # live code sync
+      - /app/node_modules               # keep container node_modules
+
+# ── Volumes (persistent storage) ──────────────────────
+volumes:
+  postgres_data:
+  redis_data:
