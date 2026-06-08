@@ -57,10 +57,10 @@ export default function Login() {
           Don't have an account? <Link to="/register" className={styles.switchLink}>Create one</Link>
         </p>
 
-        <div className={styles.demoBox}>
+        {/* <div className={styles.demoBox}>
           <p className={styles.demoLabel}>Demo credentials</p>
           <p className={styles.demoItem}>Admin: <code>admin@voyage.com</code> / <code>Admin@1234</code></p>
-        </div>
+        </div> */}
       </div>
     </div>
   );
