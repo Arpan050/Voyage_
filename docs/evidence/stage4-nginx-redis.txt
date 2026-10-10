@@ -1,0 +1,31 @@
+commit a5084cf  |  2026-10-09 08:38 UTC  |  nginx 1.24.0 (Ubuntu)  |  redis v=7.0.15
+NOTE: real nginx/redis/postgres processes in a sandbox, NOT Docker.
+
+✓ built in 699ms
+nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /etc/nginx/nginx.conf test is successful
+--- SPA root:           200 text/html
+--- SPA deep link /packages/123 (client route): 200 text/html
+--- /api proxied:       total packages = 7
+--- /health proxied:    {"status":"ok","db":"up","cache":"disabled","uptime":56,"tim
+--- hashed asset cache: Cache-Control: max-age=31536000
+Cache-Control: public, immutable
+--- missing asset:      404
+--- SECURITY HEADERS per location:
+    / -> 3 of 3 headers
+    /assets/index-CZvGAcEn.js -> 3 of 3 headers
+    /api/packages?limit=1 -> 3 of 3 headers
+    /health -> 3 of 3 headers
+--- server_tokens hidden: Server: nginx
+
+redis: PONG
+health via nginx: {"status":"ok","db":"up","cache":"up","uptime":2,"timestamp":"2026-10-09T08:38:22.288Z"}
+--- e2e THROUGH NGINX (http://localhost) with Redis cache enabled:
+70 passed, 0 failed
+--- cache really used? keys in redis after the run:
+package:b9267d31-6df8-4a58-a5c8-fa76cc3c9593
+total keys: 1
+--- invalidation proof (list is cached, then admin edits a package, list must change at once):
+cached list keys before edit: 2
+cached list keys right after edit: 0 (want 0)
+badge now served: Edited-Live

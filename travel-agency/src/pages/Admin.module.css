@@ -48,3 +48,41 @@
   .layout { grid-template-columns: 1fr; }
   .statsRow { grid-template-columns: 1fr 1fr; }
 }
+
+/* ── Added in the TypeScript migration ───────────────────── */
+.completed { background: rgba(96,165,250,.14); color: #60a5fa; }
+.rejected  { background: rgba(226,75,74,.14);  color: #f87171; }
+
+.actionBtn {
+  background: transparent; border: 1px solid rgba(255,255,255,.18); color: var(--cream);
+  padding: 5px 12px; border-radius: 2px; cursor: pointer; margin-right: 6px;
+  font-family: var(--font-mono); font-size: .62rem; letter-spacing: .06em; text-transform: uppercase;
+}
+.actionBtn:hover:not(:disabled) { border-color: var(--terra-light); color: var(--terra-light); }
+.actionBtn:disabled { opacity: .4; cursor: not-allowed; }
+.activeBtn { border-color: rgba(74,222,128,.5); color: #4ade80; }
+.dangerBtn:hover:not(:disabled) { border-color: #f87171; color: #f87171; }
+
+.toolbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 18px; }
+.toolbar .tableTitle { margin: 0; }
+.select, .fInput {
+  background: rgba(255,255,255,.05); border: 1px solid rgba(255,255,255,.14); color: var(--cream);
+  padding: 9px 12px; border-radius: 3px; font-family: var(--font-body); font-size: .85rem; width: 100%;
+}
+.select { width: auto; }
+.fInput:focus, .select:focus { outline: none; border-color: var(--terra-light); }
+.primaryBtn {
+  background: var(--terra); color: var(--white); border: none; padding: 10px 20px; border-radius: 3px;
+  cursor: pointer; font-family: var(--font-body); font-size: .85rem;
+}
+.primaryBtn:disabled { opacity: .5; cursor: not-allowed; }
+
+.formPanel { background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.08); border-radius: 4px; padding: 22px; margin-bottom: 28px; }
+.formGrid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px; }
+.fField { display: flex; flex-direction: column; gap: 6px; }
+.fField.full { grid-column: 1 / -1; }
+.fLabel { font-size: .68rem; color: rgba(245,240,232,.55); letter-spacing: .08em; text-transform: uppercase; }
+.formActions { display: flex; gap: 10px; margin-top: 18px; }
+.pager { display: flex; justify-content: center; align-items: center; gap: 14px; padding: 22px 0 4px; color: rgba(245,240,232,.6); font-size: .82rem; }
+.muted { color: rgba(245,240,232,.4); }
+.inactiveRow td { opacity: .55; }

@@ -26,10 +26,11 @@ CREATE TABLE IF NOT EXISTS packages (
   destination   VARCHAR(200)  NOT NULL,
   region        VARCHAR(50)   NOT NULL CHECK (region IN ('europe','asia','americas','africa','oceania')),
   badge         VARCHAR(50),
-  duration_days INTEGER       NOT NULL,
-  group_min     INTEGER       NOT NULL DEFAULT 1,
+  duration_days INTEGER       NOT NULL CHECK (duration_days > 0),
+  group_min     INTEGER       NOT NULL DEFAULT 1 CHECK (group_min >= 1),
   group_max     INTEGER       NOT NULL DEFAULT 20,
-  price         NUMERIC(10,2) NOT NULL,
+  CONSTRAINT packages_group_range CHECK (group_max >= group_min),
+  price         NUMERIC(10,2) NOT NULL CHECK (price >= 0),
   description   TEXT,
   highlights    TEXT[],
   emoji         VARCHAR(10),
@@ -53,7 +54,7 @@ CREATE TABLE IF NOT EXISTS bookings (
   start_date    DATE          NOT NULL,
   total_price   NUMERIC(10,2) NOT NULL,
   status        VARCHAR(20)   NOT NULL DEFAULT 'pending'
-                  CHECK (status IN ('pending','confirmed','cancelled','completed')),
+                  CHECK (status IN ('pending','confirmed','rejected','cancelled','completed')),
   special_notes TEXT,
   created_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW(),
   updated_at    TIMESTAMPTZ   NOT NULL DEFAULT NOW()
@@ -79,6 +80,8 @@ CREATE INDEX IF NOT EXISTS idx_packages_region    ON packages(region);
 CREATE INDEX IF NOT EXISTS idx_packages_active    ON packages(is_active);
 CREATE INDEX IF NOT EXISTS idx_reviews_package    ON reviews(package_id);
 CREATE INDEX IF NOT EXISTS idx_users_email        ON users(email);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_packages_name    ON packages(name);
+CREATE UNIQUE INDEX IF NOT EXISTS uq_reviews_user_pkg ON reviews(user_id, package_id);
 
 -- ── AUTO-UPDATE updated_at ─────────────────────────────────
 CREATE OR REPLACE FUNCTION update_updated_at()
@@ -98,9 +101,7 @@ INSERT INTO packages (name, destination, region, badge, duration_days, group_min
 ('Patagonia Trek',     'Argentina&Chile', 'americas', 'Adventure',  12, 6, 14, 4100, 'Raw wilderness, glacier fields, and the iconic towers of Torres del Paine.',              ARRAY['W Circuit Trek','Grey Glacier','El Chalten Hike','Perito Moreno'],                 '🏔️', 'linear-gradient(135deg,#1e3d2a,#2d6e4a)'),
 ('Amalfi Coast Drive', 'Italy',           'europe',   'Luxury',     9,  2,  8, 3750, 'Cliff-side villages, turquoise coves, and limoncello evenings along Italy''s most dramatic coast.', ARRAY['Positano Beaches','Pompeii Day','Capri Ferry','Private Villa Stay'],  '🍋', 'linear-gradient(135deg,#3d2a1e,#6e4a2d)'),
 ('Serengeti Safari',   'Tanzania',        'africa',   'Wildlife',   11, 4, 12, 5200, 'Witness the Great Migration and big five game drives across endless golden savanna.',     ARRAY['Ngorongoro Crater','Hot Air Balloon','Maasai Village','Zanzibar Extension'],      '🦁', 'linear-gradient(135deg,#2a1e3d,#4a2d6e)')
-ON CONFLICT DO NOTHING;
+ON CONFLICT (name) DO NOTHING;
 
--- Default admin user (password: Admin@1234 — CHANGE IN PRODUCTION)
-INSERT INTO users (name, email, password_hash, role) VALUES
-('Admin User', 'admin@voyage.com', '$2a$12$LQv3c1yqBWVHxkd0LHAkCOYz6TtxMQJqhN8/LdYqJwVw3YHXxX8/y', 'admin')
-ON CONFLICT DO NOTHING;
+-- No user accounts are seeded. Create an admin with `npm run create-admin`
+-- (see README), or load db/seed_demo_admin.sql for a disposable local/demo database ONLY.

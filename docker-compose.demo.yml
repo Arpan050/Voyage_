@@ -1,0 +1,15 @@
+# DISPOSABLE DEMO ONLY: adds a publicly documented admin login (admin@voyage.com / Admin@1234)
+# and shows it on the Login page. Never use this file for anything reachable from the internet.
+#
+#   docker compose -f docker-compose.yml -f docker-compose.demo.yml up --build
+#
+# The admin row is inserted only when the database volume is first created. To reset:
+#   docker compose -f docker-compose.yml -f docker-compose.demo.yml down -v
+services:
+  db:
+    volumes:
+      - ./travel-agency-backend/db/seed_demo_admin.sql:/docker-entrypoint-initdb.d/02-demo-admin.sql:ro
+  web:
+    build:
+      args:
+        VITE_DEMO_MODE: "true"
