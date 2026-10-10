@@ -1,0 +1,36 @@
+commit a5084cf  |  2026-10-09 08:37 UTC  |  node v22.22.2  |  postgres 16.15
+
+Cluster is already running.
+### backend typecheck
+> travel-agency-backend@1.0.0 typecheck
+> tsc --noEmit
+
+exit=0
+### backend unit/integration tests
+ Test Files  3 passed (3)
+      Tests  29 passed (29)
+### backend build
+> tsc -p tsconfig.build.json
+
+exit=0
+### clean database + schema + demo seed (CI-equivalent)
+users=1
+packages=6
+### health
+{"status":"ok","db":"up","cache":"disabled","uptime":2,"timestamp":"2026-10-09T08:37:23.750Z"}
+### e2e against real PostgreSQL
+70 passed, 0 failed
+### frontend typecheck
+> tsc -b
+
+exit=0
+### frontend lint
+> travel-agency@0.0.0 lint
+> eslint .
+
+exit=0
+### frontend tests
+ Test Files  5 passed (5)
+      Tests  25 passed (25)
+### frontend build
+✓ built in 893ms

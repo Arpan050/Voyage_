@@ -44,4 +44,6 @@ node_modules/.pnpm-debug.log
 # Ignore sub-project build folders
 frontend/build/
 backend/dist/
-shared/lib/   
+shared/lib/
+# TypeScript incremental build state (generated)
+*.tsbuildinfo
